@@ -13,17 +13,17 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
         const [checked, setChecked] = useState(false);
         return (
             <div
-                className={`inline-flex cursor-pointer select-none ${className}`}
+                className={`inline-flex items-center cursor-pointer select-none ${className}`}
                 onClick={() => setChecked(!checked)}
             >
-                <div className={`shrink-0 flex items-center justify-center border rounded-sm transition-colors ${boxClassName} ${checked ? 'bg-black border-black/80' : 'bg-white'}`}>
+                <div className={`shrink-0 flex items-center justify-center border rounded-sm transition-colors self-center ${boxClassName} ${checked ? 'bg-black border-black/80' : 'bg-white'}`}>
                     {checked && (
                         <svg className="w-full h-full text-white scale-[0.8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                     )}
                 </div>
-                {children && <div className="ml-1.5">{children}</div>}
+                {children && <div className="ml-1.5 leading-none flex items-center overflow-visible self-center">{children}</div>}
             </div>
         );
     };
@@ -154,23 +154,23 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                         <section className="flex flex-col">
                             <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">1. 고객 인적사항</h2>
                             <div className="flex flex-col px-2">
-                                <div className="flex items-center justify-between border-b border-gray-300 h-10">
+                                <div className="flex items-center justify-between border-b border-gray-300 h-10 leading-[40px]">
                                     <span className="w-28 font-semibold shrink-0">· 성명</span>
                                     <span className="truncate text-black text-right flex-1">{reservation.name}</span>
                                 </div>
-                                <div className="flex items-center justify-between border-b border-gray-300 h-10">
+                                <div className="flex items-center justify-between border-b border-gray-300 h-10 leading-[40px]">
                                     <span className="w-28 font-semibold shrink-0">· 생년월일</span>
                                     <span className="flex-1"></span>
                                 </div>
-                                <div className="flex items-center justify-between border-b border-gray-300 h-10">
+                                <div className="flex items-center justify-between border-b border-gray-300 h-10 leading-[40px]">
                                     <span className="w-28 font-semibold shrink-0">· 연락처</span>
                                     <span className="truncate text-black text-right flex-1">{reservation.phone}</span>
                                 </div>
-                                <div className="flex items-center justify-between border-b border-gray-300 h-10">
+                                <div className="flex items-center justify-between border-b border-gray-300 h-10 leading-[40px]">
                                     <span className="w-28 font-semibold shrink-0">· 주소</span>
                                     <span className="flex-1"></span>
                                 </div>
-                                <div className="flex items-center justify-between border-b border-gray-300 h-10">
+                                <div className="flex items-center justify-between border-b border-gray-300 h-10 leading-[40px]">
                                     <span className="w-32 font-semibold text-gray-700 shrink-0">· 신분증 확인 여부</span>
                                     <PrintableCheckbox boxClassName="w-4 h-4 border-gray-400" className="items-center font-bold">확인 완료</PrintableCheckbox>
                                 </div>
@@ -181,23 +181,23 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                         <section className="flex flex-col">
                             <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">2. 시술 정보</h2>
                             <div className="flex flex-col px-2">
-                                <div className="flex items-center justify-between border-b border-gray-300 h-10">
+                                <div className="flex items-center justify-between border-b border-gray-300 h-10 leading-[40px]">
                                     <span className="w-24 font-semibold shrink-0">· 시술 부위</span>
                                     <span className="truncate text-black text-right flex-1">{reservation.part} ({reservation.genre})</span>
                                 </div>
-                                <div className="flex items-center justify-between border-b border-gray-300 h-10">
+                                <div className="flex items-center justify-between border-b border-gray-300 h-10 leading-[40px]">
                                     <span className="w-24 font-semibold shrink-0">· 색상 여부</span>
                                     <span className="text-black text-right flex-1">(흑백 / 컬러)</span>
                                 </div>
-                                <div className="flex items-center justify-between border-b border-gray-300 h-10 w-full">
+                                <div className="flex items-center justify-between border-b border-gray-300 h-10 leading-[40px] w-full">
                                     <span className="w-24 font-semibold shrink-0">· 시술 일자</span>
                                     <span className="truncate text-black text-right flex-1">{reservation.reservationDate} {reservation.reservationTime}</span>
                                 </div>
-                                <div className="flex items-center justify-between border-b border-gray-300 h-10">
+                                <div className="flex items-center justify-between border-b border-gray-300 h-10 leading-[40px]">
                                     <span className="w-24 font-semibold shrink-0">· 시술자 성명</span>
                                     <span className="flex-1"></span>
                                 </div>
-                                <div className="flex items-center justify-between border-b border-gray-300 h-10">
+                                <div className="flex items-center justify-between border-b border-gray-300 h-10 leading-[40px]">
                                     <span className="w-24 font-semibold shrink-0">· 시술 금액</span>
                                     <span className="flex-1"></span>
                                 </div>
@@ -219,16 +219,16 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                             <PrintableCheckbox><span>당뇨병</span></PrintableCheckbox>
                             <PrintableCheckbox><span>심장질환</span></PrintableCheckbox>
                             <PrintableCheckbox><span>고혈압</span></PrintableCheckbox>
-                            <PrintableCheckbox><span>혈액응고<br />장애</span></PrintableCheckbox>
-                            <PrintableCheckbox><span>간염<br />(HBV/HCV)</span></PrintableCheckbox>
-                            <PrintableCheckbox><span>HIV/<br />AIDS</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>혈액응고 장애</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>간염 (HBV/HCV)</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>HIV/AIDS</span></PrintableCheckbox>
 
                             {/* 두 번째 줄: 5개 항목, 왼쪽부터 배치하여 위와 열을 맞춤 */}
-                            <PrintableCheckbox><span>피부질환<br />(아토피 등)</span></PrintableCheckbox>
-                            <PrintableCheckbox><span>금속<br />알레르기</span></PrintableCheckbox>
-                            <PrintableCheckbox><span>잉크<br />알레르기</span></PrintableCheckbox>
-                            <PrintableCheckbox><span>항응고제<br />등 복용</span></PrintableCheckbox>
-                            <PrintableCheckbox className="col-span-2 md:col-span-1 items-start"><span>임신/수유</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>피부질환 (아토피 등)</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>금속 알레르기</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>잉크 알레르기</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>항응고제 등 복용</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>임신/수유</span></PrintableCheckbox>
                         </div>
                         <p className="font-bold text-red-600 mt-2 px-2 bg-red-50 py-1.5 rounded text-[11px] w-fit">→ 허위 및 누락 작성 시 발생하는 모든 책임은 본인에게 있습니다.</p>
                     </section>
