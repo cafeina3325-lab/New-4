@@ -9,6 +9,24 @@ interface ConsentModalProps {
 }
 
 export default function ConsentModal({ reservation, onClose }: ConsentModalProps) {
+    const PrintableCheckbox = ({ children, className = 'items-start', boxClassName = 'w-3.5 h-3.5 mt-0.5 border-gray-400' }: { children?: React.ReactNode, className?: string, boxClassName?: string }) => {
+        const [checked, setChecked] = useState(false);
+        return (
+            <div
+                className={`inline-flex cursor-pointer select-none ${className}`}
+                onClick={() => setChecked(!checked)}
+            >
+                <div className={`shrink-0 flex items-center justify-center border rounded-sm transition-colors ${boxClassName} ${checked ? 'bg-black border-black/80' : 'bg-white'}`}>
+                    {checked && (
+                        <svg className="w-full h-full text-white scale-[0.8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                    )}
+                </div>
+                {children && <div className="ml-1.5">{children}</div>}
+            </div>
+        );
+    };
     const printRef = useRef<HTMLDivElement>(null);
     const [isSaving, setIsSaving] = useState(false);
 
@@ -154,9 +172,7 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                                 </div>
                                 <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
                                     <span className="w-32 font-semibold text-gray-700 shrink-0">· 신분증 확인 여부</span>
-                                    <span className="font-bold flex items-center gap-2">
-                                        <input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 checked:bg-blue-600 checked:border-blue-600" /> 확인 완료
-                                    </span>
+                                    <PrintableCheckbox boxClassName="w-4 h-4 mt-0 border-gray-400" className="items-center font-bold">확인 완료</PrintableCheckbox>
                                 </div>
                             </div>
                         </section>
@@ -200,19 +216,19 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                         <h2 className="text-[13px] font-bold mb-2 mt-4 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">3. 건강 상태 확인 <span className="text-[11px] font-normal text-gray-500">(해당 여부 체크)</span></h2>
                         <div className="grid grid-cols-6 gap-y-3 gap-x-1 mb-3 px-2 text-[10.5px] leading-tight">
                             {/* 첫 번째 줄: 6개 칸을 1개씩 차지 */}
-                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>당뇨병</span></label>
-                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>심장질환</span></label>
-                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>고혈압</span></label>
-                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>혈액응고<br />장애</span></label>
-                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>간염<br />(HBV/HCV)</span></label>
-                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>HIV/<br />AIDS</span></label>
+                            <PrintableCheckbox><span>당뇨병</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>심장질환</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>고혈압</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>혈액응고<br />장애</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>간염<br />(HBV/HCV)</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>HIV/<br />AIDS</span></PrintableCheckbox>
 
                             {/* 두 번째 줄: 5개 항목, 왼쪽부터 배치하여 위와 열을 맞춤 */}
-                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>피부질환<br />(아토피 등)</span></label>
-                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>금속<br />알레르기</span></label>
-                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>잉크<br />알레르기</span></label>
-                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>항응고제<br />등 복용</span></label>
-                            <label className="flex items-start gap-1 cursor-pointer col-span-2 md:col-span-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>임신/수유</span></label>
+                            <PrintableCheckbox><span>피부질환<br />(아토피 등)</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>금속<br />알레르기</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>잉크<br />알레르기</span></PrintableCheckbox>
+                            <PrintableCheckbox><span>항응고제<br />등 복용</span></PrintableCheckbox>
+                            <PrintableCheckbox className="col-span-2 md:col-span-1 items-start"><span>임신/수유</span></PrintableCheckbox>
                         </div>
                         <p className="font-bold text-red-600 mt-2 px-2 bg-red-50 py-1.5 rounded text-[11px] w-fit">→ 허위 및 누락 작성 시 발생하는 모든 책임은 본인에게 있습니다.</p>
                     </section>
@@ -257,7 +273,7 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                     <section>
                         <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">7. 사후관리 안내 및 책임 고지</h2>
                         <ul className="space-y-4 list-none px-2">
-                            <li className="flex gap-2"><span className="font-bold min-w-[20px]">①</span> <span>본인은 시술 후 관리 방법에 대해 충분한 설명을 듣고 안내서를 수령하였음을 확인합니다. <br /> <label className="inline-flex items-center gap-2 mt-2 font-bold bg-yellow-50 px-3 py-2 rounded-lg cursor-pointer"><input type="checkbox" className="appearance-none w-4 h-4 border border-gray-400 bg-white rounded-sm shrink-0 checked:bg-blue-600 checked:border-blue-600 cursor-pointer" /> 사후관리 안내서 수령 확인</label></span></li>
+                            <li className="flex gap-2"><span className="font-bold min-w-[20px]">①</span> <span>본인은 시술 후 관리 방법에 대해 충분한 설명을 듣고 안내서를 수령하였음을 확인합니다. <br /> <PrintableCheckbox className="items-center mt-2 font-bold bg-yellow-50 px-3 py-2 rounded-lg" boxClassName="w-4 h-4 mt-0 border-gray-400">사후관리 안내서 수령 확인</PrintableCheckbox></span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">②</span> <span><strong className="text-black">[연고]</strong> 시술 부위는 지정된 연고를 1일 ___회, ___일간 도포하며 임의 사용 시 스튜디오는 책임지지 않습니다.</span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">③</span> <span><strong className="text-black">[세척]</strong> 시술 후 ___시간 이후 미온수로 부드럽게 세척하며 강한 마찰은 금지됩니다.</span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">④</span> <span><strong className="text-black">[주의]</strong> 음주( ___일), 사우나( ___주), 수영장( ___주), 격렬한 운동( ___일), 직사광선( ___주) 노출을 철저히 금합니다.</span></li>
@@ -269,9 +285,9 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                     <section>
                         <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">8. 촬영 및 홍보 사용 동의 (선택 동의)</h2>
                         <div className="flex flex-col gap-3 font-bold px-2">
-                            <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" className="appearance-none w-4 h-4 border border-gray-400 bg-white rounded-sm shrink-0 checked:bg-blue-600 checked:border-blue-600 cursor-pointer" /> 시술 부위 사진 촬영 동의</label>
-                            <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" className="appearance-none w-4 h-4 border border-gray-400 bg-white rounded-sm shrink-0 checked:bg-blue-600 checked:border-blue-600 cursor-pointer" /> SNS 및 마케팅 활용 동의</label>
-                            <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" className="appearance-none w-4 h-4 border border-gray-400 bg-white rounded-sm shrink-0 checked:bg-blue-600 checked:border-blue-600 cursor-pointer" /> 얼굴 포함 촬영 허용 동의 여부</label>
+                            <PrintableCheckbox boxClassName="w-4 h-4 mt-0 border-gray-400" className="items-center">시술 부위 사진 촬영 동의</PrintableCheckbox>
+                            <PrintableCheckbox boxClassName="w-4 h-4 mt-0 border-gray-400" className="items-center">SNS 및 마케팅 활용 동의</PrintableCheckbox>
+                            <PrintableCheckbox boxClassName="w-4 h-4 mt-0 border-gray-400" className="items-center">얼굴 포함 촬영 허용 동의 여부</PrintableCheckbox>
                         </div>
                     </section>
 
@@ -300,10 +316,9 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">③</span> <span>제3자 제공을 원칙적으로 하지 않으며, 필수 항목 미동의 시 시술이 제한될 수 있습니다.</span></li>
                         </ul>
                         <div className="px-2">
-                            <label className="inline-flex items-center gap-3 font-bold bg-blue-50 text-blue-900 border border-blue-200 px-4 py-3 rounded-lg cursor-pointer w-fit">
-                                <input type="checkbox" className="appearance-none w-4 h-4 border border-gray-400 bg-white rounded-sm shrink-0 checked:bg-blue-600 checked:border-blue-600 cursor-pointer" />
+                            <PrintableCheckbox className="items-center font-bold bg-blue-50 text-blue-900 border border-blue-200 px-4 py-3 rounded-lg w-fit" boxClassName="w-4 h-4 mt-0 border-blue-400">
                                 개인정보 수집·이용 내용에 동의합니다.
-                            </label>
+                            </PrintableCheckbox>
                         </div>
                     </section>
 
