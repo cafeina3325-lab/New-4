@@ -19,12 +19,14 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
         try {
             // Tailwind v4에서 oklch 등 최신 CSS 컬러 문법을 사용할 경우 html2canvas 내부 파서가 에러를 뿜을 수 있습니다.
             // onclone 옵션을 통해 캡처 직전 임시 생성된 document의 스타일을 RGB로 강제 변환하거나 에러를 무시하도록 우회합니다.
+            // 렌더링 강제를 위해 화면 최상단으로 임시 스크롤 맞춤 옵션 부여 (가독성/영역 깨짐 방지)
             const canvas = await html2canvas(printRef.current, {
                 scale: 2,
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 windowWidth: printRef.current.scrollWidth,
                 windowHeight: printRef.current.scrollHeight,
+                scrollY: -window.scrollY, // 현재 스크롤 위치 보정
                 onclone: (clonedDoc) => {
                     const elements = clonedDoc.querySelectorAll('*');
                     elements.forEach((el) => {
@@ -45,8 +47,7 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
 
             const imgData = canvas.toDataURL('image/png');
 
-            // A4 용지 비율에 맞춰서 PDF 생성 (세로 방향)
-            // jsPDF 인스턴스화 방식 명확화
+            // A4 용지 기준 (단위 mm)
             const pdf = new jsPDF({
                 orientation: 'portrait',
                 unit: 'mm',
@@ -54,9 +55,24 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
             });
 
             const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const imgHeightInPdf = (canvas.height * pdfWidth) / canvas.width;
 
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            let heightLeft = imgHeightInPdf;
+            let position = 0;
+
+            // 첫 페이지 이미지 추가
+            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeightInPdf);
+            heightLeft -= pdfHeight;
+
+            // 남은 내용이 있으면 새 페이지를 추가하며 이미지 이어붙이기
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeightInPdf;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeightInPdf);
+                heightLeft -= pdfHeight;
+            }
+
             pdf.save(`시술동의서_${reservation.name}_${reservation.reservationDate}.pdf`);
         } catch (error: any) {
             console.error("PDF 생성 에러:", error);
