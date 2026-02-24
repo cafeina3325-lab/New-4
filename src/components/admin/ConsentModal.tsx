@@ -151,26 +151,26 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                         {/* 왼쪽 1번 통 */}
-                        <section>
+                        <section className="flex flex-col">
                             <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">1. 고객 인적사항</h2>
-                            <div className="flex flex-col px-2">
-                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                            <div className="flex flex-col px-2 flex-grow">
+                                <div className="flex items-center flex-1 border-b border-gray-300 py-1.5 min-h-[36px]">
                                     <span className="w-28 font-semibold shrink-0">· 성명</span>
-                                    <span className="truncate">{reservation.name}</span>
+                                    <span className="truncate text-black">{reservation.name}</span>
                                 </div>
-                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                                <div className="flex items-center flex-1 border-b border-gray-300 py-1.5 min-h-[36px]">
                                     <span className="w-28 font-semibold shrink-0">· 생년월일</span>
                                     <span></span>
                                 </div>
-                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                                <div className="flex items-center flex-1 border-b border-gray-300 py-1.5 min-h-[36px]">
                                     <span className="w-28 font-semibold shrink-0">· 연락처</span>
-                                    <span className="truncate">{reservation.phone}</span>
+                                    <span className="truncate text-black">{reservation.phone}</span>
                                 </div>
-                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                                <div className="flex items-center flex-1 border-b border-gray-300 py-1.5 min-h-[36px]">
                                     <span className="w-28 font-semibold shrink-0">· 주소</span>
                                     <span></span>
                                 </div>
-                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                                <div className="flex items-center flex-1 border-b border-gray-300 py-1.5 min-h-[36px]">
                                     <span className="w-32 font-semibold text-gray-700 shrink-0">· 신분증 확인 여부</span>
                                     <PrintableCheckbox boxClassName="w-4 h-4 mt-0 border-gray-400" className="items-center font-bold">확인 완료</PrintableCheckbox>
                                 </div>
@@ -178,26 +178,26 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                         </section>
 
                         {/* 오른쪽 2번 통 */}
-                        <section>
+                        <section className="flex flex-col">
                             <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">2. 시술 정보</h2>
-                            <div className="flex flex-col px-2">
-                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                            <div className="flex flex-col px-2 flex-grow">
+                                <div className="flex items-center flex-1 border-b border-gray-300 py-1.5 min-h-[36px]">
                                     <span className="w-24 font-semibold shrink-0">· 시술 부위</span>
-                                    <span className="truncate">{reservation.part} ({reservation.genre})</span>
+                                    <span className="truncate text-black">{reservation.part} ({reservation.genre})</span>
                                 </div>
-                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                                <div className="flex items-center flex-1 border-b border-gray-300 py-1.5 min-h-[36px]">
                                     <span className="w-24 font-semibold shrink-0">· 색상 여부</span>
-                                    <span>(흑백 / 컬러)</span>
+                                    <span className="text-black">(흑백 / 컬러)</span>
                                 </div>
-                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1 w-full">
+                                <div className="flex items-center flex-1 border-b border-gray-300 py-1.5 min-h-[36px] w-full">
                                     <span className="w-24 font-semibold shrink-0">· 시술 일자</span>
-                                    <span className="truncate block flex-1">{reservation.reservationDate} {reservation.reservationTime}</span>
+                                    <span className="truncate block flex-1 text-black">{reservation.reservationDate} {reservation.reservationTime}</span>
                                 </div>
-                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                                <div className="flex items-center flex-1 border-b border-gray-300 py-1.5 min-h-[36px]">
                                     <span className="w-24 font-semibold shrink-0">· 시술자 성명</span>
                                     <span></span>
                                 </div>
-                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                                <div className="flex items-center flex-1 border-b border-gray-300 py-1.5 min-h-[36px]">
                                     <span className="w-24 font-semibold shrink-0">· 시술 금액</span>
                                     <span></span>
                                 </div>
