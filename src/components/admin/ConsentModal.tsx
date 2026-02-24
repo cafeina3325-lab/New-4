@@ -73,11 +73,11 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
             onClick={onClose}
         >
             <div
-                className="bg-white text-black w-full max-w-4xl my-auto max-h-[90vh] overflow-y-auto p-8 md:p-12 rounded-xl shadow-2xl relative"
+                className="bg-white text-black w-full max-w-4xl my-auto max-h-[90vh] overflow-y-auto p-4 md:p-6 rounded-xl shadow-2xl relative"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* 헤더 버튼 */}
-                <div className="flex justify-end gap-3 mb-8 sticky top-0 bg-white/90 pb-4 border-b z-50">
+                <div className="flex justify-end gap-2 mb-4 sticky top-0 bg-white/90 pb-2 border-b z-50">
                     <button
                         onClick={handleSavePdf}
                         disabled={isSaving}
@@ -94,69 +94,73 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                 </div>
 
                 {/* 동의서 내용 시작 (이 영역만 캡처됨) */}
-                <div ref={printRef} className="font-sans text-sm md:text-base leading-7 space-y-10 bg-white p-8 md:p-12 text-gray-900 mx-auto max-w-4xl">
-                    <div className="text-center pb-6 border-b-4 border-gray-900 mb-10">
-                        <h1 className="text-3xl md:text-4xl font-extrabold tracking-widest">시술 동의서</h1>
+                <div ref={printRef} className="font-sans text-[11px] md:text-[12px] leading-5 space-y-4 bg-white p-4 md:p-6 text-gray-900 mx-auto max-w-4xl">
+                    <div className="text-center pb-3 border-b-2 border-gray-900 mb-4">
+                        <h1 className="text-xl md:text-2xl font-extrabold tracking-widest">시술 동의서</h1>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* 왼쪽 1번 통 */}
+                        <section>
+                            <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">1. 고객 인적사항</h2>
+                            <div className="flex flex-col gap-2 px-2">
+                                <div className="flex border-b border-gray-200 pb-2">
+                                    <span className="w-24 font-semibold shrink-0">· 성명</span>
+                                    <span className="truncate">{reservation.name}</span>
+                                </div>
+                                <div className="flex border-b border-gray-200 pb-2">
+                                    <span className="w-24 font-semibold shrink-0">· 생년월일</span>
+                                    <span></span>
+                                </div>
+                                <div className="flex border-b border-gray-200 pb-2">
+                                    <span className="w-24 font-semibold shrink-0">· 연락처</span>
+                                    <span className="truncate">{reservation.phone}</span>
+                                </div>
+                                <div className="flex border-b border-gray-200 pb-2">
+                                    <span className="w-24 font-semibold shrink-0">· 주소</span>
+                                    <span></span>
+                                </div>
+                                <div className="flex border-b border-gray-200 pb-2">
+                                    <span className="w-32 font-semibold text-gray-700 shrink-0">· 신분증 확인 여부</span>
+                                    <span className="font-bold flex items-center gap-2">
+                                        <input type="checkbox" className="w-4 h-4" /> 확인 완료
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* 오른쪽 2번 통 */}
+                        <section>
+                            <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">2. 시술 정보</h2>
+                            <div className="flex flex-col gap-2 px-2">
+                                <div className="flex border-b border-gray-200 pb-2">
+                                    <span className="w-24 font-semibold shrink-0">· 시술 부위</span>
+                                    <span className="truncate">{reservation.part} ({reservation.genre})</span>
+                                </div>
+                                <div className="flex border-b border-gray-200 pb-2">
+                                    <span className="w-24 font-semibold shrink-0">· 색상 여부</span>
+                                    <span>(흑백 / 컬러)</span>
+                                </div>
+                                <div className="flex border-b border-gray-200 pb-2 w-full">
+                                    <span className="w-24 font-semibold shrink-0">· 시술 일자</span>
+                                    <span className="truncate block flex-1">{reservation.reservationDate} {reservation.reservationTime}</span>
+                                </div>
+                                <div className="flex border-b border-gray-200 pb-2">
+                                    <span className="w-24 font-semibold shrink-0">· 시술자 성명</span>
+                                    <span></span>
+                                </div>
+                            </div>
+                            {reservation.referenceText && (
+                                <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200 shadow-sm leading-relaxed text-[11px] h-full">
+                                    <span className="font-bold block mb-1 text-gray-800">· 참고 및 요청사항: </span>
+                                    <p className="whitespace-pre-wrap text-gray-700">{reservation.referenceText}</p>
+                                </div>
+                            )}
+                        </section>
                     </div>
 
                     <section>
-                        <h2 className="text-xl font-bold mb-4 bg-gray-100 p-3 rounded-md border-l-4 border-gray-600">1. 고객 인적사항</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-2">
-                            <div className="flex border-b border-gray-200 pb-3">
-                                <span className="w-32 font-semibold">· 성명</span>
-                                <span>{reservation.name}</span>
-                            </div>
-                            <div className="flex border-b border-gray-200 pb-2">
-                                <span className="w-32 font-semibold">· 생년월일</span>
-                                <span></span>
-                            </div>
-                            <div className="flex border-b border-gray-200 pb-2">
-                                <span className="w-32 font-semibold">· 연락처</span>
-                                <span>{reservation.phone}</span>
-                            </div>
-                            <div className="flex border-b border-gray-200 pb-2">
-                                <span className="w-32 font-semibold">· 주소</span>
-                                <span></span>
-                            </div>
-                            <div className="flex border-b border-gray-200 pb-3 md:col-span-2">
-                                <span className="w-40 font-semibold text-gray-700">· 신분증 확인 여부</span>
-                                <span className="font-bold flex items-center gap-2">
-                                    <input type="checkbox" className="w-5 h-5" /> 확인 완료
-                                </span>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section>
-                        <h2 className="text-xl font-bold mb-4 bg-gray-100 p-3 rounded-md border-l-4 border-gray-600">2. 시술 정보</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-2">
-                            <div className="flex border-b border-gray-200 pb-3">
-                                <span className="w-32 font-semibold">· 시술 부위</span>
-                                <span>{reservation.part} ({reservation.genre})</span>
-                            </div>
-                            <div className="flex border-b border-gray-200 pb-2">
-                                <span className="w-32 font-semibold">· 색상 여부</span>
-                                <span>(흑백 / 컬러)</span>
-                            </div>
-                            <div className="flex border-b border-gray-200 pb-2">
-                                <span className="w-32 font-semibold">· 시술 일자</span>
-                                <span>{reservation.reservationDate} {reservation.reservationTime}</span>
-                            </div>
-                            <div className="flex border-b border-gray-200 pb-2">
-                                <span className="w-32 font-semibold">· 시술자 성명</span>
-                                <span></span>
-                            </div>
-                        </div>
-                        {reservation.referenceText && (
-                            <div className="mt-6 p-5 bg-gray-50 rounded-lg border border-gray-200 shadow-sm leading-relaxed">
-                                <span className="font-bold block mb-2 text-gray-800">· 참고 및 요청사항: </span>
-                                <p className="whitespace-pre-wrap text-gray-700">{reservation.referenceText}</p>
-                            </div>
-                        )}
-                    </section>
-
-                    <section>
-                        <h2 className="text-xl font-bold mb-4 bg-gray-100 p-3 rounded-md border-l-4 border-gray-600">3. 건강 상태 확인 <span className="text-sm font-normal text-gray-600">(해당 여부 체크)</span></h2>
+                        <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">3. 건강 상태 확인 <span className="text-sm font-normal text-gray-600">(해당 여부 체크)</span></h2>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-4 mb-4 px-2">
                             <label className="flex items-center gap-2"><input type="checkbox" className="w-4 h-4" /> 당뇨병</label>
                             <label className="flex items-center gap-2"><input type="checkbox" className="w-4 h-4" /> 심장질환</label>
@@ -174,7 +178,7 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-bold mb-4 bg-gray-100 p-3 rounded-md border-l-4 border-gray-600">4. 감염 및 부작용 고지</h2>
+                        <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">4. 감염 및 부작용 고지</h2>
                         <ul className="space-y-4 list-none px-2">
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">①</span> <span>본인은 시술 후 3~7일간 다음과 같은 반응이 일반적으로 나타날 수 있음을 충분히 설명 듣고 이해합니다.<br /><span className="text-gray-600 mt-1 block pl-6">· 미세한 출혈 또는 진물<br />· 붓기 및 열감<br />· 가려움<br />· 각질 형성 및 탈락<br />· 일시적 색상 진함 또는 흐림 현상</span></span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">②</span> <span>위와 같은 반응은 피부 재생 과정에서 발생하는 <strong className="text-black">자연스러운 현상</strong>임을 이해하며, 이를 이유로 환불 또는 책임을 요구하지 않습니다.</span></li>
@@ -186,7 +190,7 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-bold mb-4 bg-gray-100 p-3 rounded-md border-l-4 border-gray-600">5. 의료행위 아님 고지</h2>
+                        <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">5. 의료행위 아님 고지</h2>
                         <ul className="space-y-4 list-none px-2">
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">①</span> <span>본 시술은 미용 목적의 색소 시술로서 <strong className="text-black">의료법상 의료행위에 해당하지 않습니다.</strong></span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">②</span> <span>본 시술은 질병의 예방·진단·치료를 목적으로 하지 않으며, 어떠한 의학적 효능이나 치료 효과도 보장하지 않습니다.</span></li>
@@ -198,7 +202,7 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-bold mb-4 bg-gray-100 p-3 rounded-md border-l-4 border-gray-600">6. 디자인 및 결과 책임 범위</h2>
+                        <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">6. 디자인 및 결과 책임 범위</h2>
                         <ul className="space-y-4 list-none px-2">
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">①</span> <span>본인은 피부 톤, 두께, 재생 속도, 면역 상태 등에 따라 발색·채도·명도는 <strong className="text-black">개인차가 발생함</strong>을 이해합니다.</span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">②</span> <span>동일 도안이라 하더라도 부위, 마찰 정도 등에 따라 번짐, 흐림, 굵기 변화가 발생할 수 있음을 인지합니다.</span></li>
@@ -211,19 +215,19 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-bold mb-4 bg-gray-100 p-3 rounded-md border-l-4 border-gray-600">7. 사후관리 안내 및 책임 고지</h2>
+                        <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">7. 사후관리 안내 및 책임 고지</h2>
                         <ul className="space-y-4 list-none px-2">
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">①</span> <span>본인은 시술 후 관리 방법에 대해 충분한 설명을 듣고 안내서를 수령하였음을 확인합니다. <br /> <label className="inline-flex items-center gap-2 mt-2 font-bold bg-yellow-50 px-3 py-2 rounded-lg cursor-pointer"><input type="checkbox" className="w-5 h-5 cursor-pointer" /> 사후관리 안내서 수령 확인</label></span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">②</span> <span><strong className="text-black">[연고]</strong> 시술 부위는 지정된 연고를 1일 ___회, ___일간 도포하며 임의 사용 시 스튜디오는 책임지지 않습니다.</span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">③</span> <span><strong className="text-black">[세척]</strong> 시술 후 ___시간 이후 미온수로 부드럽게 세척하며 강한 마찰은 금지됩니다.</span></li>
-                            <li className="flex gap-2"><span className="font-bold min-w-[20px]">④</span> <span><strong className="text-black">[주의]</strong> 음주(___일), 사우나(___주), 수영장(___주), 격렬한 운동(___일), 직사광선(___주) 노출을 철저히 금합니다.</span></li>
+                            <li className="flex gap-2"><span className="font-bold min-w-[20px]">④</span> <span><strong className="text-black">[주의]</strong> 음주( ___일), 사우나( ___주), 수영장( ___주), 격렬한 운동( ___일), 직사광선( ___주) 노출을 철저히 금합니다.</span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">⑤</span> <span><strong className="text-black">[터치]</strong> 긁기, 문지르기, 강제 각질 제거, 오염 노출 등을 자제해야 합니다.</span></li>
                             <li className="flex gap-2 text-red-600"><span className="font-bold min-w-[20px]">⑥</span> <strong className="font-bold">지침 미이행으로 발생한 부작용은 고객 책임이며, 외부 병원 치료 시에도 스튜디오는 책임을 지지 않습니다.</strong></li>
                         </ul>
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-bold mb-4 bg-gray-100 p-3 rounded-md border-l-4 border-gray-600">8. 촬영 및 홍보 사용 동의 (선택 동의)</h2>
+                        <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">8. 촬영 및 홍보 사용 동의 (선택 동의)</h2>
                         <div className="flex flex-col gap-3 font-bold px-2">
                             <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" className="w-5 h-5 cursor-pointer" /> 시술 부위 사진 촬영 동의</label>
                             <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" className="w-5 h-5 cursor-pointer" /> SNS 및 마케팅 활용 동의</label>
@@ -232,7 +236,7 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-bold mb-4 bg-gray-100 p-3 rounded-md border-l-4 border-gray-600">9. 환불 및 예약 규정</h2>
+                        <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">9. 환불 및 예약 규정</h2>
                         <ul className="space-y-4 list-none px-2">
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">①</span> <span>예약금은 <strong className="text-black">디자인 작업 착수 등에 따른 비용</strong>으로 어떠한 경우에도 환불되지 않습니다.</span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">②</span> <span>일정 변경은 ___일 전까지 1회 가능, 당일 취소/노쇼 시 재예약 제한 및 예약금 소멸. 지각 ___분 이상 시 시술 자동 취소.</span></li>
@@ -242,14 +246,14 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-bold mb-4 bg-gray-100 p-3 rounded-md border-l-4 border-gray-600">10. 면책 및 자발적 동의 조항</h2>
+                        <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">10. 면책 및 자발적 동의 조항</h2>
                         <p className="leading-relaxed px-2 text-justify">
                             본인은 충분한 설명을 듣고 자발적으로 시술에 동의하며, 궁금한 사항을 모두 확인했습니다. 강요 없이 스스로 판단하였으며, 정상적인 의사결정 상태에서 서명합니다. <strong className="text-black">법적 분쟁 발생 시 본 동의서가 유효한 증빙 자료임에 동의합니다.</strong>
                         </p>
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-bold mb-4 bg-gray-100 p-3 rounded-md border-l-4 border-gray-600">11. 개인정보 수집·이용 동의</h2>
+                        <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">11. 개인정보 수집·이용 동의</h2>
                         <ul className="space-y-3 list-none px-2 mb-4">
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">①</span> <span><strong>목적 :</strong> 예약 관리, 시술 기록 보관, 사후관리 및 분쟁 증빙 용도</span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">②</span> <span><strong>보관 :</strong> 시술일로부터 ___년간 보관 후 즉시 파기.</span></li>
@@ -263,26 +267,26 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                         </div>
                     </section>
 
-                    <section className="mt-16 pt-10 border-t-4 border-gray-900">
-                        <h2 className="text-xl font-bold mb-10 text-center">12. 동의 및 서명란</h2>
-                        <div className="flex flex-col md:flex-row justify-between items-center gap-12 md:gap-8 max-w-2xl mx-auto">
+                    <section className="mt-8 pt-4 border-t-2 border-gray-900">
+                        <h2 className="text-[14px] font-bold mb-4 text-center">12. 동의 및 서명란</h2>
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-4 max-w-2xl mx-auto">
                             <div className="w-full text-center">
-                                <div className="flex border-b-2 border-dashed border-gray-400 pb-2 justify-center text-lg">
-                                    <span className="font-bold">20 <span className="text-white">____</span> 년 <span className="text-white">_____</span> 월 <span className="text-white">_____</span> 일</span>
+                                <div className="flex border-b border-dashed border-gray-400 pb-1 justify-center text-[12px]">
+                                    <span className="font-bold">202 <span className="text-white">_</span> 년 <span className="text-white">__</span> 월 <span className="text-white">__</span> 일</span>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex flex-col md:flex-row gap-12 mt-12 max-w-2xl mx-auto">
-                            <div className="flex-1 flex flex-col gap-4">
-                                <span className="font-bold text-lg">고객 서명 :</span>
-                                <div className="border-b-2 border-black h-12 flex items-end justify-center pb-2">
-                                    <span className="font-bold italic text-gray-300 text-xl tracking-widest">(Sign)</span>
+                        <div className="flex flex-col md:flex-row gap-6 mt-6 max-w-2xl mx-auto">
+                            <div className="flex-1 flex flex-col gap-2">
+                                <span className="font-bold text-[13px]">고객 서명 :</span>
+                                <div className="border-b border-black h-8 flex items-end justify-center pb-1">
+                                    <span className="font-bold italic text-gray-300 text-[14px] tracking-widest">(Sign)</span>
                                 </div>
                             </div>
-                            <div className="flex-1 flex flex-col gap-4">
-                                <span className="font-bold text-lg">시술자 서명 :</span>
-                                <div className="border-b-2 border-black h-12 flex items-end justify-center pb-2">
-                                    <span className="font-bold italic text-gray-300 text-xl tracking-widest">(Sign)</span>
+                            <div className="flex-1 flex flex-col gap-2">
+                                <span className="font-bold text-[13px]">시술자 서명 :</span>
+                                <div className="border-b border-black h-8 flex items-end justify-center pb-1">
+                                    <span className="font-bold italic text-gray-300 text-[14px] tracking-widest">(Sign)</span>
                                 </div>
                             </div>
                         </div>
