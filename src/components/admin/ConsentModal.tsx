@@ -17,6 +17,16 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
         setIsSaving(true);
 
         try {
+            // PDF가 잘리지 않도록 캡처 직전 모달 컨테이너의 제한된 높이와 스크롤을 임시로 풉니다.
+            const modalContainer = printRef.current.parentElement;
+            const originalMaxHeight = modalContainer ? modalContainer.style.maxHeight : '';
+            const originalOverflow = modalContainer ? modalContainer.style.overflow : '';
+
+            if (modalContainer) {
+                modalContainer.style.maxHeight = 'none';
+                modalContainer.style.overflow = 'visible';
+            }
+
             // Tailwind v4에서 oklch 등 최신 CSS 컬러 문법을 사용할 경우 html2canvas 내부 파서가 에러를 뿜을 수 있습니다.
             // onclone 옵션을 통해 캡처 직전 임시 생성된 document의 스타일을 RGB로 강제 변환하거나 에러를 무시하도록 우회합니다.
             // 렌더링 강제를 위해 화면 최상단으로 임시 스크롤 맞춤 옵션 부여 (가독성/영역 깨짐 방지)
@@ -79,6 +89,12 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
             // 에러의 상세 내용을 출력하도록 변경합니다
             alert(`PDF 생성 중 오류가 발생했습니다.\n상세: ${error?.message || error}`);
         } finally {
+            // 변경했던 스타일 원상복구
+            const modalContainer = printRef.current?.parentElement;
+            if (modalContainer) {
+                modalContainer.style.maxHeight = ''; // reset to class value
+                modalContainer.style.overflow = '';
+            }
             setIsSaving(false);
         }
     };
@@ -115,31 +131,31 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                         <h1 className="text-xl md:text-2xl font-extrabold tracking-widest">시술 동의서</h1>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                         {/* 왼쪽 1번 통 */}
                         <section>
                             <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">1. 고객 인적사항</h2>
-                            <div className="flex flex-col gap-2 px-2">
-                                <div className="flex border-b border-gray-200 pb-2">
-                                    <span className="w-24 font-semibold shrink-0">· 성명</span>
+                            <div className="flex flex-col px-2">
+                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                                    <span className="w-28 font-semibold shrink-0">· 성명</span>
                                     <span className="truncate">{reservation.name}</span>
                                 </div>
-                                <div className="flex border-b border-gray-200 pb-2">
-                                    <span className="w-24 font-semibold shrink-0">· 생년월일</span>
+                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                                    <span className="w-28 font-semibold shrink-0">· 생년월일</span>
                                     <span></span>
                                 </div>
-                                <div className="flex border-b border-gray-200 pb-2">
-                                    <span className="w-24 font-semibold shrink-0">· 연락처</span>
+                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                                    <span className="w-28 font-semibold shrink-0">· 연락처</span>
                                     <span className="truncate">{reservation.phone}</span>
                                 </div>
-                                <div className="flex border-b border-gray-200 pb-2">
-                                    <span className="w-24 font-semibold shrink-0">· 주소</span>
+                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                                    <span className="w-28 font-semibold shrink-0">· 주소</span>
                                     <span></span>
                                 </div>
-                                <div className="flex border-b border-gray-200 pb-2">
+                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
                                     <span className="w-32 font-semibold text-gray-700 shrink-0">· 신분증 확인 여부</span>
                                     <span className="font-bold flex items-center gap-2">
-                                        <input type="checkbox" className="w-4 h-4" /> 확인 완료
+                                        <input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 checked:bg-blue-600 checked:border-blue-600" /> 확인 완료
                                     </span>
                                 </div>
                             </div>
@@ -148,50 +164,55 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                         {/* 오른쪽 2번 통 */}
                         <section>
                             <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">2. 시술 정보</h2>
-                            <div className="flex flex-col gap-2 px-2">
-                                <div className="flex border-b border-gray-200 pb-2">
+                            <div className="flex flex-col px-2">
+                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
                                     <span className="w-24 font-semibold shrink-0">· 시술 부위</span>
                                     <span className="truncate">{reservation.part} ({reservation.genre})</span>
                                 </div>
-                                <div className="flex border-b border-gray-200 pb-2">
+                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
                                     <span className="w-24 font-semibold shrink-0">· 색상 여부</span>
                                     <span>(흑백 / 컬러)</span>
                                 </div>
-                                <div className="flex border-b border-gray-200 pb-2 w-full">
+                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1 w-full">
                                     <span className="w-24 font-semibold shrink-0">· 시술 일자</span>
                                     <span className="truncate block flex-1">{reservation.reservationDate} {reservation.reservationTime}</span>
                                 </div>
-                                <div className="flex border-b border-gray-200 pb-2">
+                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
                                     <span className="w-24 font-semibold shrink-0">· 시술자 성명</span>
                                     <span></span>
                                 </div>
-                            </div>
-                            {reservation.referenceText && (
-                                <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200 shadow-sm leading-relaxed text-[11px] h-full">
-                                    <span className="font-bold block mb-1 text-gray-800">· 참고 및 요청사항: </span>
-                                    <p className="whitespace-pre-wrap text-gray-700">{reservation.referenceText}</p>
+                                <div className="flex items-center min-h-[32px] border-b border-gray-200 py-1">
+                                    <span className="w-24 font-semibold shrink-0">· 시술 금액</span>
+                                    <span></span>
                                 </div>
-                            )}
+                            </div>
                         </section>
                     </div>
 
+                    {reservation.referenceText && (
+                        <div className="mt-2 mx-2 p-3 bg-gray-50 rounded-lg border border-gray-200 shadow-sm leading-relaxed text-[11px]">
+                            <span className="font-bold block mb-1 text-gray-800">· 참고 및 요청사항: </span>
+                            <p className="whitespace-pre-wrap text-gray-700">{reservation.referenceText}</p>
+                        </div>
+                    )}
+
                     <section>
-                        <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">3. 건강 상태 확인 <span className="text-[11px] font-normal text-gray-500">(해당 여부 체크)</span></h2>
-                        <div className="grid grid-cols-6 gap-y-3 gap-x-2 mb-3 px-2 text-[11px]">
+                        <h2 className="text-[13px] font-bold mb-2 mt-4 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">3. 건강 상태 확인 <span className="text-[11px] font-normal text-gray-500">(해당 여부 체크)</span></h2>
+                        <div className="grid grid-cols-6 gap-y-3 gap-x-1 mb-3 px-2 text-[10.5px] leading-tight">
                             {/* 첫 번째 줄: 6개 칸을 1개씩 차지 */}
-                            <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 당뇨병</label>
-                            <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 심장질환</label>
-                            <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 고혈압</label>
-                            <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 혈액응고 장애</label>
-                            <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 간염(HBV/HCV)</label>
-                            <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> HIV/AIDS</label>
+                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>당뇨병</span></label>
+                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>심장질환</span></label>
+                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>고혈압</span></label>
+                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>혈액응고<br />장애</span></label>
+                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>간염<br />(HBV/HCV)</span></label>
+                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>HIV/<br />AIDS</span></label>
 
                             {/* 두 번째 줄: 5개 항목, 왼쪽부터 배치하여 위와 열을 맞춤 */}
-                            <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 피부질환(아토피 등)</label>
-                            <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 금속 알레르기</label>
-                            <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 잉크 알레르기 경험</label>
-                            <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 약물 복용(항응고제 등)</label>
-                            <label className="flex items-center gap-1.5 whitespace-nowrap cursor-pointer col-span-2 md:col-span-1"><input type="checkbox" className="w-4 h-4" /> 임신/수유 중</label>
+                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>피부질환<br />(아토피 등)</span></label>
+                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>금속<br />알레르기</span></label>
+                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>잉크<br />알레르기</span></label>
+                            <label className="flex items-start gap-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>항응고제<br />등 복용</span></label>
+                            <label className="flex items-start gap-1 cursor-pointer col-span-2 md:col-span-1"><input type="checkbox" className="appearance-none w-3.5 h-3.5 border border-gray-400 bg-white rounded-sm shrink-0 mt-0.5" /> <span>임신/수유</span></label>
                         </div>
                         <p className="font-bold text-red-600 mt-2 px-2 bg-red-50 py-1.5 rounded text-[11px] w-fit">→ 허위 및 누락 작성 시 발생하는 모든 책임은 본인에게 있습니다.</p>
                     </section>
@@ -236,7 +257,7 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                     <section>
                         <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">7. 사후관리 안내 및 책임 고지</h2>
                         <ul className="space-y-4 list-none px-2">
-                            <li className="flex gap-2"><span className="font-bold min-w-[20px]">①</span> <span>본인은 시술 후 관리 방법에 대해 충분한 설명을 듣고 안내서를 수령하였음을 확인합니다. <br /> <label className="inline-flex items-center gap-2 mt-2 font-bold bg-yellow-50 px-3 py-2 rounded-lg cursor-pointer"><input type="checkbox" className="w-5 h-5 cursor-pointer" /> 사후관리 안내서 수령 확인</label></span></li>
+                            <li className="flex gap-2"><span className="font-bold min-w-[20px]">①</span> <span>본인은 시술 후 관리 방법에 대해 충분한 설명을 듣고 안내서를 수령하였음을 확인합니다. <br /> <label className="inline-flex items-center gap-2 mt-2 font-bold bg-yellow-50 px-3 py-2 rounded-lg cursor-pointer"><input type="checkbox" className="appearance-none w-4 h-4 border border-gray-400 bg-white rounded-sm shrink-0 checked:bg-blue-600 checked:border-blue-600 cursor-pointer" /> 사후관리 안내서 수령 확인</label></span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">②</span> <span><strong className="text-black">[연고]</strong> 시술 부위는 지정된 연고를 1일 ___회, ___일간 도포하며 임의 사용 시 스튜디오는 책임지지 않습니다.</span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">③</span> <span><strong className="text-black">[세척]</strong> 시술 후 ___시간 이후 미온수로 부드럽게 세척하며 강한 마찰은 금지됩니다.</span></li>
                             <li className="flex gap-2"><span className="font-bold min-w-[20px]">④</span> <span><strong className="text-black">[주의]</strong> 음주( ___일), 사우나( ___주), 수영장( ___주), 격렬한 운동( ___일), 직사광선( ___주) 노출을 철저히 금합니다.</span></li>
@@ -248,9 +269,9 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                     <section>
                         <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">8. 촬영 및 홍보 사용 동의 (선택 동의)</h2>
                         <div className="flex flex-col gap-3 font-bold px-2">
-                            <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" className="w-5 h-5 cursor-pointer" /> 시술 부위 사진 촬영 동의</label>
-                            <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" className="w-5 h-5 cursor-pointer" /> SNS 및 마케팅 활용 동의</label>
-                            <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" className="w-5 h-5 cursor-pointer" /> 얼굴 포함 촬영 허용 동의 여부</label>
+                            <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" className="appearance-none w-4 h-4 border border-gray-400 bg-white rounded-sm shrink-0 checked:bg-blue-600 checked:border-blue-600 cursor-pointer" /> 시술 부위 사진 촬영 동의</label>
+                            <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" className="appearance-none w-4 h-4 border border-gray-400 bg-white rounded-sm shrink-0 checked:bg-blue-600 checked:border-blue-600 cursor-pointer" /> SNS 및 마케팅 활용 동의</label>
+                            <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" className="appearance-none w-4 h-4 border border-gray-400 bg-white rounded-sm shrink-0 checked:bg-blue-600 checked:border-blue-600 cursor-pointer" /> 얼굴 포함 촬영 허용 동의 여부</label>
                         </div>
                     </section>
 
@@ -280,7 +301,7 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                         </ul>
                         <div className="px-2">
                             <label className="inline-flex items-center gap-3 font-bold bg-blue-50 text-blue-900 border border-blue-200 px-4 py-3 rounded-lg cursor-pointer w-fit">
-                                <input type="checkbox" className="w-5 h-5 cursor-pointer" />
+                                <input type="checkbox" className="appearance-none w-4 h-4 border border-gray-400 bg-white rounded-sm shrink-0 checked:bg-blue-600 checked:border-blue-600 cursor-pointer" />
                                 개인정보 수집·이용 내용에 동의합니다.
                             </label>
                         </div>
