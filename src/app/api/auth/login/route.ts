@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 import prisma from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 const secretKey = new TextEncoder().encode(
     process.env.JWT_SECRET || 'fallback_secret_key_for_development_cafeina'
 );
