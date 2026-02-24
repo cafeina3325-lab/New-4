@@ -24,9 +24,10 @@ model Reservation {
 model Review {
   id          String   @id @default(cuid())
   author      String
+  password    String?  // 수정/삭제용 비밀번호 (선택)
   rating      Int
-  text        String
-  imageUrl    String?
+  text        String?  // 리뷰 내용 (선택)
+  imageUrl    String?  // 리뷰 이미지 (선택)
   isAnonymous Boolean  @default(false)
   createdAt   DateTime @default(now())
 }

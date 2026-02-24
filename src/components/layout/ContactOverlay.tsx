@@ -33,11 +33,14 @@ export default function ContactOverlay({
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [files, setFiles] = useState<File[]>([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Review State
     const [reviewRating, setReviewRating] = useState(5);
     const [reviewText, setReviewText] = useState("");
+    const [reviewPassword, setReviewPassword] = useState("");
     const [isAnonymous, setIsAnonymous] = useState(false);
+    const [isReviewSubmitting, setIsReviewSubmitting] = useState(false);
 
     // Date Generation (Next 14 days)
     const dates = useMemo(() => {
@@ -93,48 +96,109 @@ export default function ContactOverlay({
         }
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!name || !phone || !selectedPart || !selectedGenre || !selectedDate || !selectedTime) {
             alert("필수 항목(이름, 연락처, 부위, 장르, 날짜, 시간)을 모두 입력해주세요.");
             return;
         }
 
-        const formData = {
-            name,
-            phone,
-            part: selectedPart,
-            genre: selectedGenre,
-            referenceText,
-            files: files.map(f => f.name),
-            date: selectedDate.toLocaleDateString(),
-            time: selectedTime
-        };
+        setIsSubmitting(true);
+        try {
+            const year = selectedDate.getFullYear();
+            const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+            const day = String(selectedDate.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
 
-        console.log("Reservation Request:", formData);
-        alert(`[${name}]님, 상담 예약이 접수되었습니다. \n(실제 서버 전송은 구현되지 않았습니다.)`);
-        onClose();
+            const formData = {
+                name,
+                phone,
+                part: selectedPart,
+                genre: selectedGenre,
+                referenceText,
+                referenceImages: JSON.stringify(files.map(f => f.name)),
+                reservationDate: formattedDate,
+                reservationTime: selectedTime
+            };
+
+            const res = await fetch('/api/reservations', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            if (res.ok) {
+                alert(`[${name}]님, 상담 예약이 정상적으로 접수되었습니다!`);
+                onClose();
+            } else {
+                const data = await res.json();
+                alert(`예약 접수 실패: ${data.error || '다시 시도해주세요.'}`);
+            }
+        } catch (error) {
+            console.error("Reservation Error:", error);
+            alert("네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const { addReview } = useReviews();
 
-    const handleReviewSubmit = () => {
-        if (!name || !reviewText) {
-            alert("보호자 성함(또는 닉네임)과 후기 내용을 입력해주세요.");
+    const handleReviewSubmit = async () => {
+        if (!name) {
+            alert("보호자 성함(또는 닉네임)을 입력해주세요.");
             return;
         }
 
-        // Using a high-quality placeholder image if no file is selected
-        const reviewData = {
-            author: name,
-            rating: reviewRating,
-            text: reviewText,
-            image: "https://images.unsplash.com/photo-1590201777771-0824cf9260c6?q=80&w=800",
-            hideName: isAnonymous
-        };
+        setIsReviewSubmitting(true);
+        try {
+            let uploadedImageUrl = null;
 
-        addReview(reviewData);
-        alert("소중한 후기가 접수되었습니다. 감사합니다!");
-        onClose();
+            // 이미지가 첨부된 경우 Blob에 업로드
+            if (files.length > 0) {
+                const file = files[0];
+                const response = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
+                    method: 'POST',
+                    body: file,
+                });
+
+                if (response.ok) {
+                    const blob = await response.json();
+                    uploadedImageUrl = blob.url;
+                } else {
+                    alert('이미지 업로드에 실패했습니다. 리뷰만 등록됩니다.');
+                }
+            }
+
+            // 리뷰 DB 저장 API 호출
+            const reviewData = {
+                author: name,
+                password: reviewPassword || null,
+                rating: reviewRating,
+                text: reviewText || null,
+                imageUrl: uploadedImageUrl,
+                isAnonymous
+            };
+
+            const res = await fetch('/api/reviews', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reviewData)
+            });
+
+            if (res.ok) {
+                alert("소중한 후기가 성공적으로 등록되었습니다. 감사합니다!");
+                onClose();
+            } else {
+                const data = await res.json();
+                alert(`리뷰 등록 실패: ${data.error || '다시 시도해주세요.'}`);
+            }
+
+        } catch (error) {
+            console.error("Review Submit Error:", error);
+            alert("네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        } finally {
+            setIsReviewSubmitting(false);
+        }
     };
 
     const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
@@ -431,10 +495,11 @@ export default function ContactOverlay({
                             </button>
                             <button
                                 onClick={handleSubmit}
-                                className={`px-8 py-3 bg-[#B69676] text-[#1C1310] font-bold rounded-lg shadow-lg hover:bg-[#A68666] hover:shadow-xl transition-all ${(!name || !phone || !selectedDate || !selectedTime || !selectedPart || !selectedGenre) ? 'opacity-50 cursor-not-allowed' : ''
+                                disabled={isSubmitting || (!name || !phone || !selectedDate || !selectedTime || !selectedPart || !selectedGenre)}
+                                className={`px-8 py-3 bg-[#B69676] text-[#1C1310] font-bold rounded-lg shadow-lg hover:bg-[#A68666] hover:shadow-xl transition-all ${(isSubmitting || !name || !phone || !selectedDate || !selectedTime || !selectedPart || !selectedGenre) ? 'opacity-50 cursor-not-allowed' : ''
                                     }`}
                             >
-                                예약하기
+                                {isSubmitting ? '처리 중...' : '예약하기'}
                             </button>
                         </div>
                     </>
@@ -472,6 +537,19 @@ export default function ContactOverlay({
                                             </button>
                                         </div>
                                     </div>
+                                    {/* Password Field */}
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#D4B483] mb-2">Password <span className="text-[#D4B483]/50 text-xs font-normal">(Option: 추후 수정/삭제에 쓰입니다)</span></label>
+                                        <input
+                                            type="password"
+                                            value={reviewPassword}
+                                            onChange={(e) => setReviewPassword(e.target.value)}
+                                            placeholder="비밀번호 4자리 (선택사항)"
+                                            maxLength={4}
+                                            className="w-full sm:w-1/2 p-4 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#B69676]/20 transition-all text-[#D6C7B5] placeholder-[#D4B483]/30"
+                                        />
+                                    </div>
+
                                     <div>
                                         <label className="block text-sm font-bold text-[#D4B483] mb-2">Rating <span className="text-[#B69676]">*</span></label>
                                         <div className="flex gap-2 p-4 bg-white/5 border border-white/10 rounded-xl">
@@ -499,7 +577,7 @@ export default function ContactOverlay({
                             <section>
                                 <h3 className="text-xl font-bold text-[#D6C7B5] mb-4 flex items-center gap-2">
                                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#B69676] text-[#1C1310] text-xs">2</span>
-                                    Work Proof <span className="text-[#D4B483]/50 text-sm font-normal ml-auto">Upload tattoo photo</span>
+                                    Work Proof <span className="text-[#D4B483]/50 text-sm font-normal ml-auto">(Option) Upload tattoo photo</span>
                                 </h3>
                                 <div className="border-2 border-dashed border-[#B69676]/20 rounded-xl p-12 text-center hover:bg-[#B69676]/5 transition-colors relative">
                                     <input
@@ -525,7 +603,7 @@ export default function ContactOverlay({
                             <section>
                                 <h3 className="text-xl font-bold text-[#D6C7B5] mb-6 flex items-center gap-2">
                                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#B69676] text-[#1C1310] text-xs">3</span>
-                                    Content <span className="text-[#D4B483]/50 text-sm font-normal ml-auto">* Required</span>
+                                    Content <span className="text-[#D4B483]/50 text-sm font-normal ml-auto">(Option) Review text</span>
                                 </h3>
                                 <div className="space-y-4">
                                     <textarea
@@ -542,15 +620,16 @@ export default function ContactOverlay({
                         <div className="p-6 border-t border-white/10 bg-black/20 backdrop-blur-md sticky bottom-0 z-10 flex justify-end gap-4">
                             <button
                                 onClick={() => setViewMode('selection')}
-                                className="px-6 py-3 text-gray-400 font-bold hover:text-white transition-colors"
+                                className="px-6 py-3 text-[#D4B483]/60 font-bold hover:text-[#D6C7B5] transition-colors"
                             >
                                 Back
                             </button>
                             <button
                                 onClick={handleReviewSubmit}
-                                className={`px-8 py-3 bg-[#B69676] text-[#1C1310] font-bold rounded-lg shadow-lg hover:bg-[#A68666] hover:shadow-xl transition-all ${(!name || !reviewText) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                disabled={isReviewSubmitting || !name}
+                                className={`px-8 py-3 bg-[#B69676] text-[#1C1310] font-bold rounded-lg shadow-lg hover:bg-[#A68666] hover:shadow-xl transition-all ${(isReviewSubmitting || !name) ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                리뷰 등록하기
+                                {isReviewSubmitting ? '등록 중...' : '리뷰 등록하기'}
                             </button>
                         </div>
                     </>
