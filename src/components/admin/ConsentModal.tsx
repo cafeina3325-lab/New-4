@@ -161,18 +161,24 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
 
                     <section>
                         <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">3. 건강 상태 확인 <span className="text-[11px] font-normal text-gray-500">(해당 여부 체크)</span></h2>
-                        <div className="flex flex-wrap gap-x-3 gap-y-2 mb-3 px-2 text-[11px]">
-                            <label className="flex items-center gap-1 whitespace-nowrap"><input type="checkbox" className="w-3 h-3" /> 당뇨병</label>
-                            <label className="flex items-center gap-1 whitespace-nowrap"><input type="checkbox" className="w-3 h-3" /> 심장질환</label>
-                            <label className="flex items-center gap-1 whitespace-nowrap"><input type="checkbox" className="w-3 h-3" /> 고혈압</label>
-                            <label className="flex items-center gap-1 whitespace-nowrap"><input type="checkbox" className="w-3 h-3" /> 혈액응고 장애</label>
-                            <label className="flex items-center gap-1 whitespace-nowrap"><input type="checkbox" className="w-3 h-3" /> 간염(HBV/HCV)</label>
-                            <label className="flex items-center gap-1 whitespace-nowrap"><input type="checkbox" className="w-3 h-3" /> HIV/AIDS</label>
-                            <label className="flex items-center gap-1 whitespace-nowrap"><input type="checkbox" className="w-3 h-3" /> 피부질환(아토피 등)</label>
-                            <label className="flex items-center gap-1 whitespace-nowrap"><input type="checkbox" className="w-3 h-3" /> 금속 알레르기</label>
-                            <label className="flex items-center gap-1 whitespace-nowrap"><input type="checkbox" className="w-3 h-3" /> 잉크 알레르기 경험</label>
-                            <label className="flex items-center gap-1 whitespace-nowrap"><input type="checkbox" className="w-3 h-3" /> 약물 복용(항응고제 등)</label>
-                            <label className="flex items-center gap-1 whitespace-nowrap cursor-pointer"><input type="checkbox" className="w-3.5 h-3.5" /> 임신/수유 중</label>
+                        <div className="flex flex-col gap-3 mb-3 px-2 text-[11px]">
+                            {/* 첫 번째 줄: 6개 */}
+                            <div className="flex flex-wrap gap-x-5 gap-y-2">
+                                <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 당뇨병</label>
+                                <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 심장질환</label>
+                                <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 고혈압</label>
+                                <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 혈액응고 장애</label>
+                                <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 간염(HBV/HCV)</label>
+                                <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> HIV/AIDS</label>
+                            </div>
+                            {/* 두 번째 줄: 5개 */}
+                            <div className="flex flex-wrap gap-x-5 gap-y-2">
+                                <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 피부질환(아토피 등)</label>
+                                <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 금속 알레르기</label>
+                                <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 잉크 알레르기 경험</label>
+                                <label className="flex items-center gap-1.5 whitespace-nowrap"><input type="checkbox" className="w-3.5 h-3.5" /> 약물 복용(항응고제 등)</label>
+                                <label className="flex items-center gap-1.5 whitespace-nowrap cursor-pointer"><input type="checkbox" className="w-4 h-4" /> 임신/수유 중</label>
+                            </div>
                         </div>
                         <p className="font-bold text-red-600 mt-2 px-2 bg-red-50 py-1.5 rounded text-[11px] w-fit">→ 허위 및 누락 작성 시 발생하는 모든 책임은 본인에게 있습니다.</p>
                     </section>
