@@ -160,21 +160,21 @@ export default function ConsentModal({ reservation, onClose }: ConsentModalProps
                     </div>
 
                     <section>
-                        <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">3. 건강 상태 확인 <span className="text-sm font-normal text-gray-600">(해당 여부 체크)</span></h2>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-4 mb-4 px-2">
-                            <label className="flex items-center gap-2"><input type="checkbox" className="w-4 h-4" /> 당뇨병</label>
-                            <label className="flex items-center gap-2"><input type="checkbox" className="w-4 h-4" /> 심장질환</label>
-                            <label className="flex items-center gap-2"><input type="checkbox" className="w-4 h-4" /> 고혈압</label>
-                            <label className="flex items-center gap-2"><input type="checkbox" className="w-4 h-4" /> 혈액응고 장애</label>
-                            <label className="flex items-center gap-2"><input type="checkbox" className="w-4 h-4" /> 간염(HBV/HCV)</label>
-                            <label className="flex items-center gap-2"><input type="checkbox" className="w-4 h-4" /> HIV/AIDS</label>
-                            <label className="flex items-center gap-2"><input type="checkbox" className="w-4 h-4" /> 피부질환(아토피 등)</label>
-                            <label className="flex items-center gap-2"><input type="checkbox" className="w-4 h-4" /> 금속 알레르기</label>
-                            <label className="flex items-center gap-2"><input type="checkbox" className="w-4 h-4" /> 잉크 알레르기 경험</label>
-                            <label className="flex items-center gap-2"><input type="checkbox" className="w-4 h-4" /> 약물 복용(항응고제 등)</label>
-                            <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" className="w-5 h-5" /> 임신 또는 수유 중</label>
+                        <h2 className="text-[13px] font-bold mb-2 bg-gray-100 p-2 rounded-md border-l-2 border-gray-600">3. 건강 상태 확인 <span className="text-[11px] font-normal text-gray-500">(해당 여부 체크)</span></h2>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-3 gap-x-2 mb-3 px-2 text-[11px]">
+                            <label className="flex items-center gap-1.5"><input type="checkbox" className="w-3.5 h-3.5" /> 당뇨병</label>
+                            <label className="flex items-center gap-1.5"><input type="checkbox" className="w-3.5 h-3.5" /> 심장질환</label>
+                            <label className="flex items-center gap-1.5"><input type="checkbox" className="w-3.5 h-3.5" /> 고혈압</label>
+                            <label className="flex items-center gap-1.5"><input type="checkbox" className="w-3.5 h-3.5" /> 혈액응고 장애</label>
+                            <label className="flex items-center gap-1.5"><input type="checkbox" className="w-3.5 h-3.5" /> 간염(HBV/HCV)</label>
+                            <label className="flex items-center gap-1.5"><input type="checkbox" className="w-3.5 h-3.5" /> HIV/AIDS</label>
+                            <label className="flex items-center gap-1.5"><input type="checkbox" className="w-3.5 h-3.5" /> 피부질환(아토피 등)</label>
+                            <label className="flex items-center gap-1.5"><input type="checkbox" className="w-3.5 h-3.5" /> 금속 알레르기</label>
+                            <label className="flex items-center gap-1.5"><input type="checkbox" className="w-3.5 h-3.5" /> 잉크 알레르기 경험</label>
+                            <label className="flex items-center gap-1.5"><input type="checkbox" className="w-3.5 h-3.5" /> 약물 복용(항응고제 등)</label>
+                            <label className="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" className="w-4 h-4" /> 임신/수유 중</label>
                         </div>
-                        <p className="font-bold text-red-600 mt-4 px-2 bg-red-50 py-2 rounded">→ 허위 및 누락 작성 시 발생하는 모든 책임은 본인에게 있습니다.</p>
+                        <p className="font-bold text-red-600 mt-2 px-2 bg-red-50 py-1.5 rounded text-[11px] w-fit">→ 허위 및 누락 작성 시 발생하는 모든 책임은 본인에게 있습니다.</p>
                     </section>
 
                     <section>
